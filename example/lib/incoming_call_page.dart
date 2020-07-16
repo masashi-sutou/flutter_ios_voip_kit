@@ -22,26 +22,18 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
   void initState() {
     super.initState();
 
-    voIPKit.onDidReceiveIncomingPush = ((
+    voIPKit.onDidReceiveIncomingPush = (
       Map<String, dynamic> payload,
     ) async {
       // NOTE: Notifies device of VoIP notifications(PushKit) if there is a server to post to APNs.
-      print('🎈 example: onDidRejectIncomingCall $payload');
-      dummyCallId = payload['incoming_caller_id'];
-      dummyCallerName = payload['incoming_caller_name'];
-
-      await voIPKit.testIncomingCall(
-        rtcChannelId: Uuid().v4(),
-        callerId: dummyCallId,
-        callerName: dummyCallerName,
-      );
+      print('🎈 example: onDidReceiveIncomingPush $payload');
       _timeOut();
       setState(() {
         isIncomingCalling = true;
       });
-    });
+    };
 
-    voIPKit.onDidRejectIncomingCall = ((
+    voIPKit.onDidRejectIncomingCall = (
       String channelId,
       String callerId,
     ) {
@@ -55,9 +47,9 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
         isIncomingCalling = false;
         isTalking = false;
       });
-    });
+    };
 
-    voIPKit.onDidAcceptIncomingCall = ((
+    voIPKit.onDidAcceptIncomingCall = (
       String channelId,
       String callerId,
     ) {
@@ -72,7 +64,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
         isIncomingCalling = false;
         isTalking = true;
       });
-    });
+    };
 
     _showRequestAuthLocalNotification();
   }
@@ -200,7 +192,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
   }
 
   void _timeOut({
-    int seconds = 10,
+    int seconds = 15,
   }) async {
     await Future.delayed(Duration(seconds: seconds), () async {
       if (!isIncomingCalling || isTalking) {
