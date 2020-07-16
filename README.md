@@ -96,6 +96,14 @@ Select call role | 🤙 Caller page | 🔔 Callee page
 
 ## Q&A
 
+### Does CallKit have a call and outgoing call screen?
+
+- No. CallKit support incoming call screen only. You need to make your own a call and outgoing call screens.
+
+### Can I use remote push device token instead of VoIP device token?
+
+- No. Since the specifications of VoIP token and push token are different, it is necessary to manage them separately in your database.
+
 ### Can't get VoIP token on iOS13
 
 - Please uninstall the app, restart the terminal and reinstall the app. You can get it after a while.
