@@ -59,6 +59,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
 
       print('🎈 example: onDidAcceptIncomingCall $channelId, $callerId');
       voIPKit.acceptIncomingCall(callerState: CallStateType.calling);
+      voIPKit.callConnected();
       timeOutTimer?.cancel();
 
       setState(() {

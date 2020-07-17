@@ -91,6 +91,11 @@ public class SwiftFlutterIOSVoIPKitPlugin: NSObject {
         result(nil)
     }
 
+    private func callConnected(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        self.voIPCenter.callKitCenter.callConnected()
+        result(nil)
+    }
+
     public func requestAuthLocalNotification(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         self.notificationCenter.requestAuthorization(options: self.options) { (_, _) in }
         result(nil)
@@ -134,6 +139,7 @@ extension SwiftFlutterIOSVoIPKitPlugin: FlutterPlugin {
         case endCall
         case acceptIncomingCall
         case unansweredIncomingCall
+        case callConnected
         case requestAuthLocalNotification
         case testIncomingCall
     }
@@ -158,6 +164,8 @@ extension SwiftFlutterIOSVoIPKitPlugin: FlutterPlugin {
                 self.acceptIncomingCall(call, result: result)
             case .unansweredIncomingCall:
                 self.unansweredIncomingCall(call, result: result)
+            case .callConnected:
+                self.callConnected(call, result: result)
             case .requestAuthLocalNotification:
                 self.requestAuthLocalNotification(call, result: result)
             case .testIncomingCall:

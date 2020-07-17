@@ -21,7 +21,7 @@ class CallKitCenter: NSObject {
     private(set) var rtcChannelId: String?
     private(set) var incomingCallerId: String?
     private(set) var incomingCallerName: String?
-    private(set) var isConnected: Bool = false
+    private(set) var isCallConnected: Bool = false
     var answerCallAction: CXAnswerCallAction?
 
     override init() {
@@ -76,6 +76,13 @@ class CallKitCenter: NSObject {
         update.supportsHolding = false
         update.supportsGrouping = false
         update.supportsUngrouping = true
+        self.provider?.reportNewIncomingCall(with: self.uuid, update: update, completion: { error in
+            if (error == nil) {
+                self.connectedOutgoingCall()
+            }
+
+            completion(error)
+        })
         self.provider?.reportNewIncomingCall(with: self.uuid, update: update, completion: completion)
     }
 
@@ -88,7 +95,6 @@ class CallKitCenter: NSObject {
 
         self.answerCallAction?.fulfill()
         self.answerCallAction = nil
-        self.connected()
     }
 
     func unansweredIncomingCall() {
@@ -105,12 +111,15 @@ class CallKitCenter: NSObject {
         }
     }
 
-    func connecting() {
+    func callConnected() {
+        self.isCallConnected = true
+    }
+
+    func connectingOutgoingCall() {
         self.provider?.reportOutgoingCall(with: self.uuid, startedConnectingAt: nil)
     }
 
-    private func connected() {
-        self.isConnected = true
+    private func connectedOutgoingCall() {
         self.provider?.reportOutgoingCall(with: self.uuid, connectedAt: nil)
     }
 
@@ -119,7 +128,7 @@ class CallKitCenter: NSObject {
         self.incomingCallerId = nil
         self.incomingCallerName = nil
         self.answerCallAction = nil
-        self.isConnected = false
+        self.isCallConnected = false
 
         self.provider?.reportCall(with: self.uuid, endedAt: nil, reason: reason)
     }
