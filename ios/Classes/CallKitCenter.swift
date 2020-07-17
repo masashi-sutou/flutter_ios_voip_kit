@@ -21,8 +21,13 @@ class CallKitCenter: NSObject {
     private(set) var rtcChannelId: String?
     private(set) var incomingCallerId: String?
     private(set) var incomingCallerName: String?
-    private(set) var isCallConnected: Bool = false
+    private var isReceivedIncomingCall: Bool = false
+    private var isCallConnected: Bool = false
     var answerCallAction: CXAnswerCallAction?
+
+    var isCalleeBeforeAcceptIncomingCall: Bool {
+        return self.isReceivedIncomingCall && !self.isCallConnected
+    }
 
     override init() {
         if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
@@ -68,6 +73,7 @@ class CallKitCenter: NSObject {
         self.rtcChannelId = rtcChannelId
         self.incomingCallerId = callerId
         self.incomingCallerName = callerName
+        self.isReceivedIncomingCall = true
 
         self.uuid = UUID(uuidString: rtcChannelId)!
         let update = CXCallUpdate()
@@ -83,7 +89,6 @@ class CallKitCenter: NSObject {
 
             completion(error)
         })
-        self.provider?.reportNewIncomingCall(with: self.uuid, update: update, completion: completion)
     }
 
     func acceptIncomingCall(alreadyEndCallerReason: CXCallEndedReason?) {
@@ -128,6 +133,7 @@ class CallKitCenter: NSObject {
         self.incomingCallerId = nil
         self.incomingCallerName = nil
         self.answerCallAction = nil
+        self.isReceivedIncomingCall = false
         self.isCallConnected = false
 
         self.provider?.reportCall(with: self.uuid, endedAt: nil, reason: reason)

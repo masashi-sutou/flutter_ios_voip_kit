@@ -152,7 +152,7 @@ extension VoIPCenter: CXProviderDelegate {
 
     public func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         print("❎ VoIP CXEndCallAction")
-        if (!self.callKitCenter.isCallConnected) {
+        if (self.callKitCenter.isCalleeBeforeAcceptIncomingCall) {
             self.eventSink?(["event": EventChannel.onDidRejectIncomingCall.rawValue,
                              "rtc_channel_id": self.callKitCenter.rtcChannelId as Any,
                              "incoming_caller_id": self.callKitCenter.incomingCallerId as Any])
