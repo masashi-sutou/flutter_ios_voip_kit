@@ -109,14 +109,19 @@ public class SwiftFlutterIOSVoIPKitPlugin: NSObject {
                 result(FlutterError(code: "InvalidArguments testIncomingCall", message: nil, details: nil))
                 return
         }
-        self.voIPCenter.callKitCenter.setup(delegate: self.voIPCenter)
-        self.voIPCenter.callKitCenter.incomingCall(rtcChannelId: rtcChannelId, callerId: callerId, callerName: callerName) { (error) in
+
+        self.voIPCenter.callKitCenter.incomingCall(rtcChannelId: rtcChannelId,
+                                                   callerId: callerId,
+                                                   callerName: callerName) { (error) in
             if let error = error {
                 print("❌ testIncomingCall error: \(error.localizedDescription)")
+                result(FlutterError(code: "testIncomingCall",
+                                    message: error.localizedDescription,
+                                    details: nil))
                 return
             }
+            result(nil)
         }
-        result(nil)
     }
 }
 

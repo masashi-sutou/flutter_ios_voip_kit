@@ -111,6 +111,7 @@ extension VoIPCenter: PKPushRegistryDelegate {
                 return
             }
             self.eventSink?(["event": EventChannel.onDidReceiveIncomingPush.rawValue,
+                             "payload": info as Any,
                              "incoming_caller_name": callerName])
         }
     }
