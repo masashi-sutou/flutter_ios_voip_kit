@@ -1,3 +1,8 @@
+## 0.0.2
+
+* fix error start call action
+* update README.md
+
 ## 0.0.1+3
 
 * fix EndCal and example app
