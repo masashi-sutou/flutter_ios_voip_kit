@@ -40,6 +40,17 @@ class CallKitCenter: NSObject {
         super.init()
     }
 
+    func setup(delegate: CXProviderDelegate) {
+        let providerConfiguration = CXProviderConfiguration(localizedName: self.localizedName)
+        providerConfiguration.supportsVideo = self.supportVideo
+        providerConfiguration.maximumCallsPerCallGroup = 1
+        providerConfiguration.maximumCallGroups = 2
+        providerConfiguration.supportedHandleTypes = [.generic]
+        providerConfiguration.iconTemplateImageData = UIImage(named: self.iconName)?.pngData()
+        self.provider = CXProvider(configuration: providerConfiguration)
+        self.provider?.setDelegate(delegate, queue: nil)
+    }
+
     func startCall(rtcChannelId: String, targetName: String) {
         self.uuid = UUID(uuidString: rtcChannelId)!
         let handle = CXHandle(type: .generic, value: targetName)
@@ -51,17 +62,6 @@ class CallKitCenter: NSObject {
                 print("❌ CXStartCallAction error: \(error.localizedDescription)")
             }
         }
-    }
-
-    func setup(delegate: CXProviderDelegate) {
-        let providerConfiguration = CXProviderConfiguration(localizedName: self.localizedName)
-        providerConfiguration.supportsVideo = self.supportVideo
-        providerConfiguration.maximumCallsPerCallGroup = 1
-        providerConfiguration.maximumCallGroups = 2
-        providerConfiguration.supportedHandleTypes = [.generic]
-        providerConfiguration.iconTemplateImageData = UIImage(named: self.iconName)?.pngData()
-        self.provider = CXProvider(configuration: providerConfiguration)
-        self.provider?.setDelegate(delegate, queue: nil)
     }
 
     func incomingCall(rtcChannelId: String, callerId: String, callerName: String, completion: @escaping (Error?) -> Void) {

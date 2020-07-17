@@ -62,6 +62,7 @@ class VoIPCenter: NSObject {
         super.init()
         self.eventChannel.setStreamHandler(self)
         self.pushRegistry.delegate = self
+        self.callKitCenter.setup(delegate: self)
     }
 }
 
@@ -79,7 +80,6 @@ extension VoIPCenter: PKPushRegistryDelegate {
     public func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         print("🎈 VoIP didReceiveIncomingPushWith completion: \(payload.dictionaryPayload)")
 
-        self.callKitCenter.setup(delegate: self)
         let info = self.parse(payload: payload)
         let callerName = info?["incoming_caller_name"] as! String
         self.callKitCenter.incomingCall(rtcChannelId: info?["rtc_channel_id"] as! String,
@@ -101,7 +101,6 @@ extension VoIPCenter: PKPushRegistryDelegate {
     public func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType) {
         print("🎈 VoIP didReceiveIncomingPushWith: \(payload.dictionaryPayload)")
 
-        self.callKitCenter.setup(delegate: self)
         let info = self.parse(payload: payload)
         let callerName = info?["incoming_caller_name"] as! String
         self.callKitCenter.incomingCall(rtcChannelId: info?["rtc_channel_id"] as! String,
