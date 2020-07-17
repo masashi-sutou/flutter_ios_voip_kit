@@ -91,6 +91,11 @@ public class SwiftFlutterIOSVoIPKitPlugin: NSObject {
         result(nil)
     }
 
+    private func callConnected(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        self.voIPCenter.callKitCenter.callConnected()
+        result(nil)
+    }
+
     public func requestAuthLocalNotification(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         self.notificationCenter.requestAuthorization(options: self.options) { (_, _) in }
         result(nil)
@@ -104,14 +109,19 @@ public class SwiftFlutterIOSVoIPKitPlugin: NSObject {
                 result(FlutterError(code: "InvalidArguments testIncomingCall", message: nil, details: nil))
                 return
         }
-        self.voIPCenter.callKitCenter.setup(delegate: self.voIPCenter)
-        self.voIPCenter.callKitCenter.incomingCall(rtcChannelId: rtcChannelId, callerId: callerId, callerName: callerName) { (error) in
+
+        self.voIPCenter.callKitCenter.incomingCall(rtcChannelId: rtcChannelId,
+                                                   callerId: callerId,
+                                                   callerName: callerName) { (error) in
             if let error = error {
                 print("❌ testIncomingCall error: \(error.localizedDescription)")
+                result(FlutterError(code: "testIncomingCall",
+                                    message: error.localizedDescription,
+                                    details: nil))
                 return
             }
+            result(nil)
         }
-        result(nil)
     }
 }
 
@@ -134,6 +144,7 @@ extension SwiftFlutterIOSVoIPKitPlugin: FlutterPlugin {
         case endCall
         case acceptIncomingCall
         case unansweredIncomingCall
+        case callConnected
         case requestAuthLocalNotification
         case testIncomingCall
     }
@@ -158,6 +169,8 @@ extension SwiftFlutterIOSVoIPKitPlugin: FlutterPlugin {
                 self.acceptIncomingCall(call, result: result)
             case .unansweredIncomingCall:
                 self.unansweredIncomingCall(call, result: result)
+            case .callConnected:
+                self.callConnected(call, result: result)
             case .requestAuthLocalNotification:
                 self.requestAuthLocalNotification(call, result: result)
             case .testIncomingCall:

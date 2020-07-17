@@ -132,6 +132,16 @@ class FlutterIOSVoIPKit {
     });
   }
 
+  Future<void> callConnected() async {
+    print('🎈 callConnected');
+
+    if (Platform.isAndroid) {
+      return null;
+    }
+
+    return await _channel.invokeMethod('callConnected');
+  }
+
   Future<void> requestAuthLocalNotification() async {
     print('🎈 requestAuthLocalNotification');
 

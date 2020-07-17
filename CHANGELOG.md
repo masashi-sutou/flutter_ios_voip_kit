@@ -1,3 +1,8 @@
+## 0.0.3
+
+* fix onDidRejectIncomingCall be called after call connected
+* rename reportOutgoingCall to avoid misunderstanding
+
 ## 0.0.2
 
 * fix error start call action
