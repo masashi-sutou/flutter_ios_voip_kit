@@ -1,3 +1,7 @@
+## 0.0.1+3
+
+* fix EndCal and example app
+
 ## 0.0.1+2
 
 * fix example app

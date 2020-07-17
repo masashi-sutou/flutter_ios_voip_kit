@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ios_voip_kit/call_state_type.dart';
@@ -15,7 +17,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
   final voIPKit = FlutterIOSVoIPKit.instance;
   var dummyCallId = '123456';
   var dummyCallerName = 'Dummy Tester';
-  bool isIncomingCalling = false;
+  Timer timeOutTimer;
   bool isTalking = false;
 
   @override
@@ -28,9 +30,6 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
       // NOTE: Notifies device of VoIP notifications(PushKit) if there is a server to post to APNs.
       print('🎈 example: onDidReceiveIncomingPush $payload');
       _timeOut();
-      setState(() {
-        isIncomingCalling = true;
-      });
     };
 
     voIPKit.onDidRejectIncomingCall = (
@@ -43,8 +42,9 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
 
       print('🎈 example: onDidRejectIncomingCall $channelId, $callerId');
       voIPKit.endCall();
+      timeOutTimer?.cancel();
+
       setState(() {
-        isIncomingCalling = false;
         isTalking = false;
       });
     };
@@ -59,9 +59,9 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
 
       print('🎈 example: onDidAcceptIncomingCall $channelId, $callerId');
       voIPKit.acceptIncomingCall(callerState: CallStateType.calling);
+      timeOutTimer?.cancel();
 
       setState(() {
-        isIncomingCalling = false;
         isTalking = true;
       });
     };
@@ -71,6 +71,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
 
   @override
   void dispose() {
+    timeOutTimer?.cancel();
     voIPKit.dispose();
     super.dispose();
   }
@@ -177,9 +178,6 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
                   callerName: dummyCallerName,
                 );
                 _timeOut();
-                setState(() {
-                  isIncomingCalling = true;
-                });
               },
             ),
     );
@@ -194,10 +192,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
   void _timeOut({
     int seconds = 15,
   }) async {
-    await Future.delayed(Duration(seconds: seconds), () async {
-      if (!isIncomingCalling || isTalking) {
-        return;
-      }
+    timeOutTimer = Timer(Duration(seconds: seconds), () async {
       print('🎈 example: timeOut');
       final incomingCallerName = await voIPKit.getIncomingCallerName();
       voIPKit.unansweredIncomingCall(
