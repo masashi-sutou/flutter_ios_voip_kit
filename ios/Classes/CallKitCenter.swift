@@ -21,6 +21,7 @@ class CallKitCenter: NSObject {
     private(set) var rtcChannelId: String?
     private(set) var incomingCallerId: String?
     private(set) var incomingCallerName: String?
+    private(set) var isConnected: Bool = false
     var answerCallAction: CXAnswerCallAction?
 
     override init() {
@@ -91,21 +92,17 @@ class CallKitCenter: NSObject {
     }
 
     func unansweredIncomingCall() {
-        self.rtcChannelId = nil
-        self.incomingCallerId = nil
-        self.incomingCallerName = nil
-        self.answerCallAction = nil
-
         self.disconnected(reason: .unanswered)
     }
 
     func endCall() {
-        self.rtcChannelId = nil
-        self.incomingCallerId = nil
-        self.incomingCallerName = nil
-        self.answerCallAction = nil
-
-        self.disconnected(reason: .remoteEnded)
+        let endCallAction = CXEndCallAction(call: self.uuid)
+        let transaction = CXTransaction(action: endCallAction)
+        self.controller.request(transaction) { error in
+            if let error = error {
+                print("❌ CXEndCallAction error: \(error.localizedDescription)")
+            }
+        }
     }
 
     func connecting() {
@@ -113,10 +110,17 @@ class CallKitCenter: NSObject {
     }
 
     private func connected() {
+        self.isConnected = true
         self.provider?.reportOutgoingCall(with: self.uuid, connectedAt: nil)
     }
 
     func disconnected(reason: CXCallEndedReason) {
+        self.rtcChannelId = nil
+        self.incomingCallerId = nil
+        self.incomingCallerName = nil
+        self.answerCallAction = nil
+        self.isConnected = false
+
         self.provider?.reportCall(with: self.uuid, endedAt: nil, reason: reason)
     }
 }
