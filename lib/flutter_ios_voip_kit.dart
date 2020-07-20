@@ -39,9 +39,15 @@ class FlutterIOSVoIPKit {
         .listen(_eventListener, onError: _errorListener);
   }
 
+  /// [onDidReceiveIncomingPush] is not called when the app is not running, because app is not yet running when didReceiveIncomingPushWith is called.
   IncomingPush onDidReceiveIncomingPush;
+
+  /// [onDidAcceptIncomingCall] and [onDidRejectIncomingCall] can be called even if the app is not running.
+  /// This is because the app is already running when the incoming call screen is displayed for CallKit.
+  /// If not called, make sure the app is calling [onDidAcceptIncomingCall] and [onDidRejectIncomingCall] in the Dart class(ex: main.dart) that is called immediately after the app is launched.
   IncomingAction onDidAcceptIncomingCall;
   IncomingAction onDidRejectIncomingCall;
+
   StreamSubscription<dynamic> _eventSubscription;
 
   Future<void> dispose() async {

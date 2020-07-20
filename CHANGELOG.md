@@ -1,3 +1,7 @@
+## 0.0.3+1
+
+* added doc comment to callback events.
+
 ## 0.0.3
 
 * fix onDidRejectIncomingCall be called after call connected
