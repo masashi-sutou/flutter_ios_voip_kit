@@ -55,20 +55,28 @@ We need to use CallKit to handle incoming VoIP notifications from iOS 13. [Check
 
 ### 4. create VoIP Services Certificate
 
-- Visit the Apple Developer https://developer.apple.com/certificates and create a new VoIP Services Certificate.
-- [Check Voice Over IP (VoIP) Best Practices Figure 11-2 for more information](https://developer.apple.com/library/archive/documentation/Performance/Conceptual/EnergyGuide-iOS/OptimizeVoIP.html).
+- Visit the Apple Developer https://developer.apple.com/certificates and create a new VoIP Services Certificate(`.cer`). [Check Voice Over IP (VoIP) Best Practices Figure 11-2 for more information](https://developer.apple.com/library/archive/documentation/Performance/Conceptual/EnergyGuide-iOS/OptimizeVoIP.html).
+- Create `.p12` from `.cer` with KeyChainAccess, and `.pem` with openssl.
+
+Create `.p12` from `.cer` with KeyChainAccess |
+:-: |
+<img src=https://user-images.githubusercontent.com/6649643/88076945-aa9a9d00-cbb5-11ea-9309-5f7f7df8d3b5.png width=520/> |
+
+```
+openssl pkcs12 -in voip_services.p12 -out voip_services.pem -nodes -clcerts
+```
 
 ### 5. request VoIP notification APNs from your server
 
 - See Apple document.
 - https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/sending_notification_requests_to_apns
-- add data(payload) like a below.
+- Add data(payload) like a below.
 
 ```
 {
     "aps": {
         "alert": {
-          "rtc_channel_id": <WebRTC service provides stream channel id>,
+          "uuid": <Version 4 UUID (e.g.: https://www.uuidgenerator.net/version4) >,
           "incoming_caller_id": <your service user id>,
           "incoming_caller_name": <your service user name>,
         }
@@ -76,6 +84,19 @@ We need to use CallKit to handle incoming VoIP notifications from iOS 13. [Check
 }
 ```
 
+- You can use curl to test VoIP notifications as follows.
+
+```
+curl -v \
+-d '{"aps":{"alert":{"uuid":"982cf533-7b1b-4cf6-a6e0-004aab68c503","incoming_caller_id":"0123456789","incoming_caller_name":"Tester"}}}' \
+-H "apns-push-type: voip" \
+-H "apns-expiration: 0" \
+-H "apns-priority: 0" \
+-H "apns-topic: <your app’s bundle ID>.voip" \
+--http2 \
+--cert ./voip_services.pem \
+https://api.sandbox.push.apple.com/3/device/<VoIP device Token for your iPhone>
+```
 
 ## Try out example app
 
@@ -86,9 +107,9 @@ Select call role | 🤙 Caller page | 🔔 Callee page
 :-: | :-: | :-:
 <img src=https://user-images.githubusercontent.com/6649643/87527220-c5a57280-c6c6-11ea-9357-434d13617e77.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/87527233-c9d19000-c6c6-11ea-8bad-892cb1763189.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/87527237-cb02bd00-c6c6-11ea-9eb6-0120e3bd800e.png width=180/>
 
-🔔 Callee(incoming call) | 🔔 Callee(incoming call locked) | 🔔 Callee(recall)
-:-: | :-: | :-:
-<img src=https://user-images.githubusercontent.com/6649643/87534922-a829d600-c6d1-11ea-8190-19441e6bec69.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/87535275-30a87680-c6d2-11ea-8d1e-8bf85c56f356.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/87549570-f4ccdb80-c6e8-11ea-95cc-179c2b633464.png width=180/>
+🔔 Callee(incoming call) | 🔔 Callee(locked) | 🔔 Callee(locked) | 🔔 Callee(recall)
+:-: | :-: | :-: | :-:
+<img src=https://user-images.githubusercontent.com/6649643/87534922-a829d600-c6d1-11ea-8190-19441e6bec69.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/88077993-df5b2400-cbb6-11ea-8730-d7c28def7366.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/88077978-db2f0680-cbb6-11ea-8777-9f1e59cee987.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/87549570-f4ccdb80-c6e8-11ea-95cc-179c2b633464.png width=180/>
 
 🔔 Callee(unanswered local notification) | 🔔 Callee(unanswered local notification)
 :-: | :-:
@@ -121,6 +142,11 @@ Select call role | 🤙 Caller page | 🔔 Callee page
 ### No icon is displayed on the incoming call screen when locked
 
 - The icon image should be a square with side length of 40 points. The color is ignored. Please design with the difference of alpha.
+- If created in PDF, checked `Preserve Vector Data` for Resizing and change `Single Scale` for Scales.
+
+create icon (e.g.: sketch) | Xcode Image Set
+:-: | :-:
+<img src=https://user-images.githubusercontent.com/6649643/88074708-b8025800-cbb2-11ea-9a69-3365766ff3f4.png width=320/> | <img src=https://user-images.githubusercontent.com/6649643/88073817-9785ce00-cbb1-11ea-8a62-8b68276d9209.png width=560/>
 
 ## Reference
 

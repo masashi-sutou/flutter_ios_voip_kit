@@ -1,3 +1,9 @@
+## 0.0.4
+
+* rename `rtc_channel_id` to `uuid`.
+* update document how to post VoIP notification with curl.
+* update document how to create icon for CallKit.
+
 ## 0.0.3+1
 
 * added doc comment to callback events.

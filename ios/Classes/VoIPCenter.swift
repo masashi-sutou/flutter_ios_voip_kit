@@ -82,7 +82,7 @@ extension VoIPCenter: PKPushRegistryDelegate {
 
         let info = self.parse(payload: payload)
         let callerName = info?["incoming_caller_name"] as! String
-        self.callKitCenter.incomingCall(rtcChannelId: info?["rtc_channel_id"] as! String,
+        self.callKitCenter.incomingCall(uuidString: info?["uuid"] as! String,
                                         callerId: info?["incoming_caller_id"] as! String,
                                         callerName: callerName) { error in
             if let error = error {
@@ -103,7 +103,7 @@ extension VoIPCenter: PKPushRegistryDelegate {
 
         let info = self.parse(payload: payload)
         let callerName = info?["incoming_caller_name"] as! String
-        self.callKitCenter.incomingCall(rtcChannelId: info?["rtc_channel_id"] as! String,
+        self.callKitCenter.incomingCall(uuidString: info?["uuid"] as! String,
                                         callerId: info?["incoming_caller_id"] as! String,
                                         callerName: callerName) { error in
             if let error = error {
@@ -147,7 +147,7 @@ extension VoIPCenter: CXProviderDelegate {
         print("✅ VoIP CXAnswerCallAction")
         self.callKitCenter.answerCallAction = action
         self.eventSink?(["event": EventChannel.onDidAcceptIncomingCall.rawValue,
-                         "rtc_channel_id": self.callKitCenter.rtcChannelId as Any,
+                         "uuid": self.callKitCenter.uuidString as Any,
                          "incoming_caller_id": self.callKitCenter.incomingCallerId as Any])
     }
 
@@ -155,7 +155,7 @@ extension VoIPCenter: CXProviderDelegate {
         print("❎ VoIP CXEndCallAction")
         if (self.callKitCenter.isCalleeBeforeAcceptIncomingCall) {
             self.eventSink?(["event": EventChannel.onDidRejectIncomingCall.rawValue,
-                             "rtc_channel_id": self.callKitCenter.rtcChannelId as Any,
+                             "uuid": self.callKitCenter.uuidString as Any,
                              "incoming_caller_id": self.callKitCenter.incomingCallerId as Any])
         }
 

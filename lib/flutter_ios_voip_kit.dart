@@ -13,7 +13,7 @@ typedef IncomingPush = void Function(
 );
 
 typedef IncomingAction = void Function(
-  String channelId,
+  String uuid,
   String callerId,
 );
 
@@ -79,7 +79,7 @@ class FlutterIOSVoIPKit {
   }
 
   Future<void> startCall({
-    @required String rtcChannelId,
+    @required String uuid,
     @required String targetName,
   }) async {
     print('🎈 startCall');
@@ -89,7 +89,7 @@ class FlutterIOSVoIPKit {
     }
 
     return await _channel.invokeMethod('startCall', {
-      'rtcChannelId': rtcChannelId,
+      'uuid': uuid,
       'targetName': targetName,
     });
   }
@@ -159,11 +159,11 @@ class FlutterIOSVoIPKit {
   }
 
   Future<void> testIncomingCall({
-    @required String rtcChannelId,
+    @required String uuid,
     @required String callerId,
     @required String callerName,
   }) async {
-    print('🎈 testIncomingCall: $rtcChannelId, $callerId, $callerName');
+    print('🎈 testIncomingCall: $uuid, $callerId, $callerName');
 
     final isRelease = const bool.fromEnvironment('dart.vm.product');
     if (Platform.isAndroid || isRelease) {
@@ -171,7 +171,7 @@ class FlutterIOSVoIPKit {
     }
 
     return await _channel.invokeMethod('testIncomingCall', {
-      'rtcChannelId': rtcChannelId,
+      'uuid': uuid,
       'callerId': callerId,
       'callerName': callerName,
     });
@@ -203,7 +203,7 @@ class FlutterIOSVoIPKit {
         }
 
         onDidAcceptIncomingCall(
-          map['rtc_channel_id'],
+          map['uuid'],
           map['incoming_caller_id'],
         );
         break;
@@ -215,7 +215,7 @@ class FlutterIOSVoIPKit {
         }
 
         onDidRejectIncomingCall(
-          map['rtc_channel_id'],
+          map['uuid'],
           map['incoming_caller_id'],
         );
         break;

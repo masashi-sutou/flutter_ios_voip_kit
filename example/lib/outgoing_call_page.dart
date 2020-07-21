@@ -58,7 +58,7 @@ class _OutgoingCallPageState extends State<OutgoingCallPage> {
           (isOutgoing)
               ? await voIPKit.endCall()
               : await voIPKit.startCall(
-                  rtcChannelId: Uuid().v4(),
+                  uuid: Uuid().v4(),
                   targetName: 'Dummy Tester',
                 );
           setState(() {
