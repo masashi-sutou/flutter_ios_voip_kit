@@ -27,20 +27,21 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
     voIPKit.onDidReceiveIncomingPush = (
       Map<String, dynamic> payload,
     ) async {
-      // NOTE: Notifies device of VoIP notifications(PushKit) if there is a server to post to APNs.
+      /// Notifies device of VoIP notifications(PushKit) with curl or your server(See README.md).
+      /// [onDidReceiveIncomingPush] is not called when the app is not running, because app is not yet running when didReceiveIncomingPushWith is called.
       print('🎈 example: onDidReceiveIncomingPush $payload');
       _timeOut();
     };
 
     voIPKit.onDidRejectIncomingCall = (
-      String channelId,
+      String uuid,
       String callerId,
     ) {
       if (isTalking) {
         return;
       }
 
-      print('🎈 example: onDidRejectIncomingCall $channelId, $callerId');
+      print('🎈 example: onDidRejectIncomingCall $uuid, $callerId');
       voIPKit.endCall();
       timeOutTimer?.cancel();
 
@@ -50,14 +51,14 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
     };
 
     voIPKit.onDidAcceptIncomingCall = (
-      String channelId,
+      String uuid,
       String callerId,
     ) {
       if (isTalking) {
         return;
       }
 
-      print('🎈 example: onDidAcceptIncomingCall $channelId, $callerId');
+      print('🎈 example: onDidAcceptIncomingCall $uuid, $callerId');
       voIPKit.acceptIncomingCall(callerState: CallStateType.calling);
       voIPKit.callConnected();
       timeOutTimer?.cancel();

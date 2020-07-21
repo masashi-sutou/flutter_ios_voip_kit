@@ -1,3 +1,7 @@
+## 0.0.4+1
+
+* fix example app
+
 ## 0.0.4
 
 * rename `rtc_channel_id` to `uuid`.
