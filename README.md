@@ -57,18 +57,27 @@ We need to use CallKit to handle incoming VoIP notifications from iOS 13. [Check
 
 - Visit the Apple Developer https://developer.apple.com/certificates and create a new VoIP Services Certificate.
 - [Check Voice Over IP (VoIP) Best Practices Figure 11-2 for more information](https://developer.apple.com/library/archive/documentation/Performance/Conceptual/EnergyGuide-iOS/OptimizeVoIP.html).
+- Create `.p12` from `.cer` with KeyChainAccess, and `.pem` with openssl.
+
+Create `.p12` from `.cer` with KeyChainAccess |
+:-: |
+<img src=https://user-images.githubusercontent.com/6649643/88076945-aa9a9d00-cbb5-11ea-9309-5f7f7df8d3b5.png width=520/>
+
+```
+openssl pkcs12 -in voip_services.p12 -out voip_services.pem -nodes -clcerts
+```
 
 ### 5. request VoIP notification APNs from your server
 
 - See Apple document.
 - https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/sending_notification_requests_to_apns
-- add data(payload) like a below.
+- Add data(payload) like a below.
 
 ```
 {
     "aps": {
         "alert": {
-          "rtc_channel_id": <WebRTC service provides stream channel id>,
+          "uuid": <Version 4 UUID (e.g.: https://www.uuidgenerator.net/version4) >,
           "incoming_caller_id": <your service user id>,
           "incoming_caller_name": <your service user name>,
         }
@@ -76,6 +85,19 @@ We need to use CallKit to handle incoming VoIP notifications from iOS 13. [Check
 }
 ```
 
+- You can use curl to test VoIP notifications as follows.
+
+```
+curl -v \
+-d '{"aps":{"alert":{"uuid":"982cf533-7b1b-4cf6-a6e0-004aab68c503","incoming_caller_id":"0123456789","incoming_caller_name":"Tester"}}}' \
+-H "apns-push-type: voip" \
+-H "apns-expiration: 0" \
+-H "apns-priority: 0" \
+-H "apns-topic: <your app’s bundle ID>.voip" \
+--http2 \
+--cert ./voip_services.pem \
+https://api.sandbox.push.apple.com/3/device/<VoIP device Token for your iPhone>
+```
 
 ## Try out example app
 
