@@ -61,7 +61,7 @@ We need to use CallKit to handle incoming VoIP notifications from iOS 13. [Check
 
 Create `.p12` from `.cer` with KeyChainAccess |
 :-: |
-<img src=https://user-images.githubusercontent.com/6649643/88076945-aa9a9d00-cbb5-11ea-9309-5f7f7df8d3b5.png width=520/>
+<img src=https://user-images.githubusercontent.com/6649643/88076945-aa9a9d00-cbb5-11ea-9309-5f7f7df8d3b5.png width=520/> |
 
 ```
 openssl pkcs12 -in voip_services.p12 -out voip_services.pem -nodes -clcerts
