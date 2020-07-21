@@ -125,7 +125,7 @@ Select call role | 🤙 Caller page | 🔔 Callee page
 
 create icon with sketch | Xcode Image Set
 :-: | :-:
-<img src=https://user-images.githubusercontent.com/6649643/88074708-b8025800-cbb2-11ea-9a69-3365766ff3f4.png width=320/> | <img src=https://user-images.githubusercontent.com/6649643/88073817-9785ce00-cbb1-11ea-8a62-8b68276d9209.png width=320/>
+<img src=https://user-images.githubusercontent.com/6649643/88074708-b8025800-cbb2-11ea-9a69-3365766ff3f4.png width=320/> | <img src=https://user-images.githubusercontent.com/6649643/88073817-9785ce00-cbb1-11ea-8a62-8b68276d9209.png width=480/>
 
 ## Reference
 
