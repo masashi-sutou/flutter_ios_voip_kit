@@ -36,12 +36,12 @@ public class SwiftFlutterIOSVoIPKitPlugin: NSObject {
 
     private func startCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let args = call.arguments as? [String: Any],
-            let rtcChannelId = args["rtcChannelId"] as? String,
+            let uuid = args["uuid"] as? String,
             let targetName = args["targetName"] as? String else {
                 result(FlutterError(code: "InvalidArguments startCall", message: nil, details: nil))
                 return
         }
-        self.voIPCenter.callKitCenter.startCall(rtcChannelId: rtcChannelId, targetName: targetName)
+        self.voIPCenter.callKitCenter.startCall(uuidString: uuid, targetName: targetName)
         result(nil)
     }
 
@@ -103,14 +103,14 @@ public class SwiftFlutterIOSVoIPKitPlugin: NSObject {
 
     private func testIncomingCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let args = call.arguments as? [String: Any],
-            let rtcChannelId = args["rtcChannelId"] as? String,
+            let uuid = args["uuid"] as? String,
             let callerId = args["callerId"] as? String,
             let callerName = args["callerName"] as? String else {
                 result(FlutterError(code: "InvalidArguments testIncomingCall", message: nil, details: nil))
                 return
         }
 
-        self.voIPCenter.callKitCenter.incomingCall(rtcChannelId: rtcChannelId,
+        self.voIPCenter.callKitCenter.incomingCall(uuidString: uuid,
                                                    callerId: callerId,
                                                    callerName: callerName) { (error) in
             if let error = error {

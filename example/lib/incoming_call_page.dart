@@ -174,7 +174,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
               backgroundColor: Colors.blue,
               onPressed: () async {
                 await voIPKit.testIncomingCall(
-                  rtcChannelId: Uuid().v4(),
+                  uuid: Uuid().v4(),
                   callerId: dummyCallId,
                   callerName: dummyCallerName,
                 );

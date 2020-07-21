@@ -18,7 +18,7 @@ class CallKitCenter: NSObject {
     private let skipRecallScreen: Bool
     private var provider: CXProvider?
     private var uuid = UUID()
-    private(set) var rtcChannelId: String?
+    private(set) var uuidString: String?
     private(set) var incomingCallerId: String?
     private(set) var incomingCallerName: String?
     private var isReceivedIncomingCall: Bool = false
@@ -56,8 +56,8 @@ class CallKitCenter: NSObject {
         self.provider?.setDelegate(delegate, queue: nil)
     }
 
-    func startCall(rtcChannelId: String, targetName: String) {
-        self.uuid = UUID(uuidString: rtcChannelId)!
+    func startCall(uuidString: String, targetName: String) {
+        self.uuid = UUID(uuidString: uuidString)!
         let handle = CXHandle(type: .generic, value: targetName)
         let startCallAction = CXStartCallAction(call: self.uuid, handle: handle)
         startCallAction.isVideo = self.supportVideo
@@ -69,13 +69,13 @@ class CallKitCenter: NSObject {
         }
     }
 
-    func incomingCall(rtcChannelId: String, callerId: String, callerName: String, completion: @escaping (Error?) -> Void) {
-        self.rtcChannelId = rtcChannelId
+    func incomingCall(uuidString: String, callerId: String, callerName: String, completion: @escaping (Error?) -> Void) {
+        self.uuidString = uuidString
         self.incomingCallerId = callerId
         self.incomingCallerName = callerName
         self.isReceivedIncomingCall = true
 
-        self.uuid = UUID(uuidString: rtcChannelId)!
+        self.uuid = UUID(uuidString: uuidString)!
         let update = CXCallUpdate()
         update.remoteHandle = CXHandle(type: .generic, value: callerName)
         update.hasVideo = self.supportVideo
@@ -129,7 +129,7 @@ class CallKitCenter: NSObject {
     }
 
     func disconnected(reason: CXCallEndedReason) {
-        self.rtcChannelId = nil
+        self.uuidString = nil
         self.incomingCallerId = nil
         self.incomingCallerName = nil
         self.answerCallAction = nil
