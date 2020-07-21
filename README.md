@@ -107,9 +107,9 @@ Select call role | 🤙 Caller page | 🔔 Callee page
 :-: | :-: | :-:
 <img src=https://user-images.githubusercontent.com/6649643/87527220-c5a57280-c6c6-11ea-9357-434d13617e77.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/87527233-c9d19000-c6c6-11ea-8bad-892cb1763189.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/87527237-cb02bd00-c6c6-11ea-9eb6-0120e3bd800e.png width=180/>
 
-🔔 Callee(incoming call) | 🔔 Callee(incoming call locked) | 🔔 Callee(recall)
-:-: | :-: | :-:
-<img src=https://user-images.githubusercontent.com/6649643/87534922-a829d600-c6d1-11ea-8190-19441e6bec69.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/87535275-30a87680-c6d2-11ea-8d1e-8bf85c56f356.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/87549570-f4ccdb80-c6e8-11ea-95cc-179c2b633464.png width=180/>
+🔔 Callee(incoming call) | 🔔 Callee(locked) | 🔔 Callee(locked) | 🔔 Callee(recall)
+:-: | :-: | :-: | :-:
+<img src=https://user-images.githubusercontent.com/6649643/87534922-a829d600-c6d1-11ea-8190-19441e6bec69.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/88077993-df5b2400-cbb6-11ea-8730-d7c28def7366.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/88077978-db2f0680-cbb6-11ea-8777-9f1e59cee987.png width=180/> | <img src=https://user-images.githubusercontent.com/6649643/87549570-f4ccdb80-c6e8-11ea-95cc-179c2b633464.png width=180/>
 
 🔔 Callee(unanswered local notification) | 🔔 Callee(unanswered local notification)
 :-: | :-:
