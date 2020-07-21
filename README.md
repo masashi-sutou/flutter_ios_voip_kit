@@ -121,7 +121,7 @@ Select call role | 🤙 Caller page | 🔔 Callee page
 ### No icon is displayed on the incoming call screen when locked
 
 - The icon image should be a square with side length of 40 points. The color is ignored. Please design with the difference of alpha.
-- If created in PDF, checked Preserve Vector Data for Resizing and change Single Scale for Scales.
+- If created in PDF, checked `Preserve Vector Data` for Resizing and change `Single Scale` for Scales.
 
 create icon (e.g.: sketch) | Xcode Image Set
 :-: | :-:
