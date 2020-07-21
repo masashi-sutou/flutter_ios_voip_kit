@@ -55,8 +55,7 @@ We need to use CallKit to handle incoming VoIP notifications from iOS 13. [Check
 
 ### 4. create VoIP Services Certificate
 
-- Visit the Apple Developer https://developer.apple.com/certificates and create a new VoIP Services Certificate.
-- [Check Voice Over IP (VoIP) Best Practices Figure 11-2 for more information](https://developer.apple.com/library/archive/documentation/Performance/Conceptual/EnergyGuide-iOS/OptimizeVoIP.html).
+- Visit the Apple Developer https://developer.apple.com/certificates and create a new VoIP Services Certificate(`.cer`). [Check Voice Over IP (VoIP) Best Practices Figure 11-2 for more information](https://developer.apple.com/library/archive/documentation/Performance/Conceptual/EnergyGuide-iOS/OptimizeVoIP.html).
 - Create `.p12` from `.cer` with KeyChainAccess, and `.pem` with openssl.
 
 Create `.p12` from `.cer` with KeyChainAccess |
