@@ -23,6 +23,7 @@ class CallKitCenter: NSObject {
     private(set) var incomingCallerName: String?
     private var isReceivedIncomingCall: Bool = false
     private var isCallConnected: Bool = false
+    private var maximumCallGroups: Int = 1
     var answerCallAction: CXAnswerCallAction?
 
     var isCalleeBeforeAcceptIncomingCall: Bool {
@@ -36,6 +37,7 @@ class CallKitCenter: NSObject {
             self.localizedName = plist?["FIVKLocalizedName"] as? String ?? "App Name"
             self.supportVideo = plist?["FIVKSupportVideo"] as? Bool ?? false
             self.skipRecallScreen = plist?["FIVKSkipRecallScreen"] as? Bool ?? false
+            self.maximumCallGroups = plist?["FIVKMaximumCallGroups"] as? Int ?? 1
         } else {
             self.iconName = "AppIcon-VoIPKit"
             self.localizedName = "App Name"
@@ -49,7 +51,7 @@ class CallKitCenter: NSObject {
         let providerConfiguration = CXProviderConfiguration(localizedName: self.localizedName)
         providerConfiguration.supportsVideo = self.supportVideo
         providerConfiguration.maximumCallsPerCallGroup = 1
-        providerConfiguration.maximumCallGroups = 2
+        providerConfiguration.maximumCallGroups = maximumCallGroups
         providerConfiguration.supportedHandleTypes = [.generic]
         providerConfiguration.iconTemplateImageData = UIImage(named: self.iconName)?.pngData()
         self.provider = CXProvider(configuration: providerConfiguration)
