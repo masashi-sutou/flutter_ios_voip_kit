@@ -75,3 +75,4 @@ build/
 
 generated_plugin_registrant.dart
 .flutter-plugins-dependencies
+.last_build_id
