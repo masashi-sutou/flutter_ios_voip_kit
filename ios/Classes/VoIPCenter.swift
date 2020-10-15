@@ -27,6 +27,8 @@ class VoIPCenter: NSObject {
         case onDidReceiveIncomingPush
         case onDidAcceptIncomingCall
         case onDidRejectIncomingCall
+        
+        case onDidUpdatePushToken
     }
 
     // MARK: - PushKit
@@ -73,6 +75,9 @@ extension VoIPCenter: PKPushRegistryDelegate {
     public func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
         print("🎈 VoIP didUpdate pushCredentials")
         UserDefaults.standard.set(pushCredentials.token, forKey: didUpdateTokenKey)
+        
+        self.eventSink?(["event": EventChannel.onDidUpdatePushToken.rawValue,
+                         "token": pushCredentials.token.hexString])
     }
 
     // NOTE: iOS11 or more support

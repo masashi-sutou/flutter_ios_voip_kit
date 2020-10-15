@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ios_voip_kit/flutter_ios_voip_kit.dart';
 
@@ -20,13 +22,20 @@ extension on ExampleAction {
 }
 
 void main() {
-  runApp(MaterialApp(
-    routes: <String, WidgetBuilder>{
-      OutgoingCallPage.routeName: (_) => OutgoingCallPage(),
-      IncomingCallPage.routeName: (_) => IncomingCallPage(),
-    },
-    home: SelectCallRoll(),
-  ));
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runZonedGuarded(() {
+    FlutterIOSVoIPKit.instance.onDidUpdatePushToken = (token) {
+      print('🎈 example: onDidUpdatePushToken token = $token');
+    };
+    runApp(MaterialApp(
+      routes: <String, WidgetBuilder>{
+        OutgoingCallPage.routeName: (_) => OutgoingCallPage(),
+        IncomingCallPage.routeName: (_) => IncomingCallPage(),
+      },
+      home: SelectCallRoll(),
+    ));
+  }, (object, stackTrace) {});
 }
 
 class SelectCallRoll extends StatefulWidget {

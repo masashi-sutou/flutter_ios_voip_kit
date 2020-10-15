@@ -8,6 +8,12 @@
 import Foundation
 import UserNotifications
 
+extension Data {
+    var hexString: String {
+        map { String(format: "%02.2hhx", $0) }.joined()
+    }
+}
+
 extension UNNotificationSettings {
     func toMap() -> [String: Int] {
         var result = [

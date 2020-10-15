@@ -13,6 +13,7 @@ final MethodChannel _channel = MethodChannel(ChannelType.method.name);
 typedef IncomingPush = void Function(
   Map<String, dynamic> payload,
 );
+typedef OnUpdatePushToken = void Function(String token);
 
 typedef IncomingAction = void Function(
   String uuid,
@@ -47,6 +48,7 @@ class FlutterIOSVoIPKit {
   /// If not called, make sure the app is calling [onDidAcceptIncomingCall] and [onDidRejectIncomingCall] in the Dart class(ex: main.dart) that is called immediately after the app is launched.
   IncomingAction onDidAcceptIncomingCall;
   IncomingAction onDidRejectIncomingCall;
+  OnUpdatePushToken onDidUpdatePushToken;
 
   StreamSubscription<dynamic> _eventSubscription;
 
@@ -230,6 +232,17 @@ class FlutterIOSVoIPKit {
           map['uuid'],
           map['incoming_caller_id'],
         );
+        break;
+
+      case 'onDidUpdatePushToken':
+        final String token = map['token'];
+        print('🎈 onDidUpdatePushToken $token');
+
+        if (onDidUpdatePushToken == null) {
+          return;
+        }
+
+        onDidUpdatePushToken(token);
         break;
     }
   }
