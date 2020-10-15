@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ios_voip_kit/call_state_type.dart';
 import 'package:flutter_ios_voip_kit/channel_type.dart';
 
+import 'notifications_settings.dart';
+
 final MethodChannel _channel = MethodChannel(ChannelType.method.name);
 
 typedef IncomingPush = void Function(
@@ -34,9 +36,7 @@ class FlutterIOSVoIPKit {
       return;
     }
 
-    _eventSubscription = EventChannel(ChannelType.event.name)
-        .receiveBroadcastStream()
-        .listen(_eventListener, onError: _errorListener);
+    _eventSubscription = EventChannel(ChannelType.event.name).receiveBroadcastStream().listen(_eventListener, onError: _errorListener);
   }
 
   /// [onDidReceiveIncomingPush] is not called when the app is not running, because app is not yet running when didReceiveIncomingPushWith is called.
@@ -148,14 +148,26 @@ class FlutterIOSVoIPKit {
     return await _channel.invokeMethod('callConnected');
   }
 
-  Future<void> requestAuthLocalNotification() async {
+  Future<bool> requestAuthLocalNotification() async {
     print('🎈 requestAuthLocalNotification');
 
     if (Platform.isAndroid) {
       return null;
     }
 
-    return await _channel.invokeMethod('requestAuthLocalNotification');
+    final result = await _channel.invokeMethod('requestAuthLocalNotification');
+    return result['granted'];
+  }
+
+  Future<NotificationSettings> getLocalNotificationsSettings() async {
+    print('🎈 getLocalNotificationsSettings');
+
+    if (Platform.isAndroid) {
+      return null;
+    }
+
+    final result = await _channel.invokeMethod('getLocalNotificationsSettings');
+    return NotificationSettings.createFromMap(result);
   }
 
   Future<void> testIncomingCall({

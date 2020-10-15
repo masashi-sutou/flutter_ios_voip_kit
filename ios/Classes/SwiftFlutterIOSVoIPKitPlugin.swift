@@ -97,10 +97,21 @@ public class SwiftFlutterIOSVoIPKitPlugin: NSObject {
     }
 
     public func requestAuthLocalNotification(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        self.notificationCenter.requestAuthorization(options: self.options) { (_, _) in }
-        result(nil)
+        notificationCenter.requestAuthorization(options: options) { granted, error in
+            if let error = error {
+                result(["granted": granted, "error": error.localizedDescription])
+            } else {
+                result(["granted": granted])
+            }
+        }
     }
-
+    
+    public func getLocalNotificationsSettings(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        notificationCenter.getNotificationSettings { settings in
+            result(settings.toMap())
+        }
+    }
+    
     private func testIncomingCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let args = call.arguments as? [String: Any],
             let uuid = args["uuid"] as? String,
@@ -146,6 +157,7 @@ extension SwiftFlutterIOSVoIPKitPlugin: FlutterPlugin {
         case unansweredIncomingCall
         case callConnected
         case requestAuthLocalNotification
+        case getLocalNotificationsSettings
         case testIncomingCall
     }
 
@@ -173,6 +185,8 @@ extension SwiftFlutterIOSVoIPKitPlugin: FlutterPlugin {
                 self.callConnected(call, result: result)
             case .requestAuthLocalNotification:
                 self.requestAuthLocalNotification(call, result: result)
+            case .getLocalNotificationsSettings:
+                self.getLocalNotificationsSettings(call, result: result)
             case .testIncomingCall:
                 self.testIncomingCall(call, result: result)
         }

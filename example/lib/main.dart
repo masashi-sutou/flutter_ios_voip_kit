@@ -1,6 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ios_voip_kit_example/incoming_call_page.dart';
-import 'package:flutter_ios_voip_kit_example/outgoing_call_page.dart';
+import 'package:flutter_ios_voip_kit/flutter_ios_voip_kit.dart';
+
+import 'incoming_call_page.dart';
+import 'outgoing_call_page.dart';
+
+enum ExampleAction { RequestAuthorization, GetSettings }
+
+extension on ExampleAction {
+  String get title {
+    switch (this) {
+      case ExampleAction.RequestAuthorization:
+        return 'Authorize Notifications';
+      case ExampleAction.GetSettings:
+        return 'Check Settings';
+      default:
+        return 'Unknown';
+    }
+  }
+}
 
 void main() {
   runApp(MaterialApp(
@@ -18,11 +35,55 @@ class SelectCallRoll extends StatefulWidget {
 }
 
 class _SelectCallRollState extends State<SelectCallRoll> {
+  void _performExampleAction(ExampleAction action) async {
+    switch (action) {
+      case ExampleAction.RequestAuthorization:
+        final granted = await FlutterIOSVoIPKit.instance.requestAuthLocalNotification();
+        print('🎈 example: requestAuthLocalNotification granted = $granted');
+        break;
+      case ExampleAction.GetSettings:
+        final settings = await FlutterIOSVoIPKit.instance.getLocalNotificationsSettings();
+        print('🎈 example: getLocalNotificationsSettings settings: \n$settings');
+
+        showDialog(
+            context: context,
+            builder: (ctx) {
+              return AlertDialog(
+                title: Text('Settings'),
+                content: Text('$settings'),
+                actions: [
+                  FlatButton(
+                    onPressed: () => Navigator.of(ctx).pop(),
+                    child: Text('Ok'),
+                  )
+                ],
+              );
+            });
+        break;
+      default:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select call roll'),
+        actions: [
+          PopupMenuButton<ExampleAction>(
+            icon: Icon(Icons.more_vert),
+            onSelected: (action) => _performExampleAction(action),
+            itemBuilder: (BuildContext context) {
+              return ExampleAction.values.map((ExampleAction choice) {
+                return PopupMenuItem<ExampleAction>(
+                  value: choice,
+                  child: Text(choice.title),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: Center(
