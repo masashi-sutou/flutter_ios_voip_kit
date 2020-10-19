@@ -58,12 +58,27 @@ class VoIPCenter: NSObject {
     // MARK: - CallKit
 
     let callKitCenter: CallKitCenter
+    
+    fileprivate var audioSessionMode: AVAudioSession.Mode
+    fileprivate let ioBufferDuration: TimeInterval
+    fileprivate let audioSampleRate: Double
 
     init(eventChannel: FlutterEventChannel) {
         self.eventChannel = eventChannel
         self.pushRegistry = PKPushRegistry(queue: .main)
         self.pushRegistry.desiredPushTypes = [.voIP]
         self.callKitCenter = CallKitCenter()
+        
+        if let path = Bundle.main.path(forResource: "Info", ofType: "plist"), let plist = NSDictionary(contentsOfFile: path) {
+            self.audioSessionMode = ((plist["FIVKAudioSessionMode"] as? String) ?? "audio") == "video" ? .videoChat : .voiceChat
+            self.ioBufferDuration = plist["FIVKIOBufferDuration"] as? TimeInterval ?? 0.005
+            self.audioSampleRate = plist["FIVKAudioSampleRate"] as? Double ?? 44100.0
+        } else {
+            self.audioSessionMode = .voiceChat
+            self.ioBufferDuration = TimeInterval(0.005)
+            self.audioSampleRate = 44100.0
+        }
+        
         super.init()
         self.eventChannel.setStreamHandler(self)
         self.pushRegistry.delegate = self
@@ -154,6 +169,7 @@ extension VoIPCenter: CXProviderDelegate {
     public func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         print("✅ VoIP CXAnswerCallAction")
         self.callKitCenter.answerCallAction = action
+        self.configureAudioSession()
         self.eventSink?(["event": EventChannel.onDidAcceptIncomingCall.rawValue,
                          "uuid": self.callKitCenter.uuidString as Any,
                          "incoming_caller_id": self.callKitCenter.incomingCallerId as Any])
@@ -179,6 +195,20 @@ extension VoIPCenter: CXProviderDelegate {
     public func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
         print("🔇 VoIP didDeactivate audioSession")
         self.eventSink?(["event": EventChannel.onDidDeactivateAudioSession.rawValue])
+    }
+    
+    // This is a workaround for known issue, when audio doesn't start from lockscreen call
+    // https://stackoverflow.com/questions/55391026/no-sound-after-connecting-to-webrtc-when-app-is-launched-in-background-using-pus
+    private func configureAudioSession() {
+        let sharedSession = AVAudioSession.sharedInstance()
+        do {
+            try sharedSession.setCategory(.playAndRecord)
+            try sharedSession.setMode(self.audioSessionMode)
+            try sharedSession.setPreferredIOBufferDuration(self.ioBufferDuration)
+            try sharedSession.setPreferredSampleRate(self.audioSampleRate)
+        } catch {
+            print("❌ VoIP Failed to configure `AVAudioSession`")
+        }
     }
 }
 
