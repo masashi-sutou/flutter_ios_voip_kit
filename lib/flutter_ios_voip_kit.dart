@@ -10,15 +10,10 @@ import 'notifications_settings.dart';
 
 final MethodChannel _channel = MethodChannel(ChannelType.method.name);
 
-typedef IncomingPush = void Function(
-  Map<String, dynamic> payload,
-);
+typedef IncomingPush = void Function(Map<String, dynamic> payload);
+typedef IncomingAction = void Function(String uuid, String callerId);
 typedef OnUpdatePushToken = void Function(String token);
-
-typedef IncomingAction = void Function(
-  String uuid,
-  String callerId,
-);
+typedef OnAudioSessionStateChanged = void Function(bool active);
 
 class FlutterIOSVoIPKit {
   static FlutterIOSVoIPKit get instance => _getInstance();
@@ -49,6 +44,8 @@ class FlutterIOSVoIPKit {
   IncomingAction onDidAcceptIncomingCall;
   IncomingAction onDidRejectIncomingCall;
   OnUpdatePushToken onDidUpdatePushToken;
+
+  OnAudioSessionStateChanged onAudioSessionStateChanged;
 
   StreamSubscription<dynamic> _eventSubscription;
 
@@ -243,6 +240,14 @@ class FlutterIOSVoIPKit {
         }
 
         onDidUpdatePushToken(token);
+        break;
+      case 'onDidActivateAudioSession':
+        print('🎈 onDidActivateAudioSession');
+        if (onAudioSessionStateChanged != null) onAudioSessionStateChanged(true);
+        break;
+      case 'onDidDeactivateAudioSession':
+        print('🎈 onDidDeactivateAudioSession');
+        if (onAudioSessionStateChanged != null) onAudioSessionStateChanged(false);
         break;
     }
   }

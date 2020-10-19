@@ -9,6 +9,7 @@ import Foundation
 import Flutter
 import PushKit
 import CallKit
+import AVFoundation
 
 extension String {
     internal init(deviceToken: Data) {
@@ -29,6 +30,8 @@ class VoIPCenter: NSObject {
         case onDidRejectIncomingCall
         
         case onDidUpdatePushToken
+        case onDidActivateAudioSession
+        case onDidDeactivateAudioSession
     }
 
     // MARK: - PushKit
@@ -166,6 +169,16 @@ extension VoIPCenter: CXProviderDelegate {
 
         self.callKitCenter.disconnected(reason: .remoteEnded)
         action.fulfill()
+    }
+    
+    public func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
+        print("🔈 VoIP didActivate audioSession")
+        self.eventSink?(["event": EventChannel.onDidActivateAudioSession.rawValue])
+    }
+
+    public func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
+        print("🔇 VoIP didDeactivate audioSession")
+        self.eventSink?(["event": EventChannel.onDidDeactivateAudioSession.rawValue])
     }
 }
 
