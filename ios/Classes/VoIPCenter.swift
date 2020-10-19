@@ -202,10 +202,12 @@ extension VoIPCenter: CXProviderDelegate {
     private func configureAudioSession() {
         let sharedSession = AVAudioSession.sharedInstance()
         do {
-            try sharedSession.setCategory(.playAndRecord)
-            try sharedSession.setMode(self.audioSessionMode)
-            try sharedSession.setPreferredIOBufferDuration(self.ioBufferDuration)
-            try sharedSession.setPreferredSampleRate(self.audioSampleRate)
+            try sharedSession.setCategory(.playAndRecord,
+                                          options: [AVAudioSession.CategoryOptions.allowBluetooth,
+                                                    AVAudioSession.CategoryOptions.defaultToSpeaker])
+            try sharedSession.setMode(audioSessionMode)
+            try sharedSession.setPreferredIOBufferDuration(ioBufferDuration)
+            try sharedSession.setPreferredSampleRate(audioSampleRate)
         } catch {
             print("❌ VoIP Failed to configure `AVAudioSession`")
         }
