@@ -1,3 +1,12 @@
+## 0.0.5
+
+* PR(#19)
+  * added ability to configure `FIVKMaximumCallGroups(maximumCallGroups)` setting using Info.plist.
+  * added return value to `requestAuthLocalNotification` function.
+  * added `getLocalNotificationsSettings` function which returns NotificationSettings object.
+  * added `onDidUpdatePushToken` callback.
+    * It may be used if you want to increase robustness of your application (sometimes iOS can change this token, so its good to know about this).
+
 ## 0.0.4+1
 
 * fix example app
