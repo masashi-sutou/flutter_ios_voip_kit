@@ -119,17 +119,17 @@ class NotificationSettings {
   @override
   String toString() {
     return '''
-authorizationStatus = ${authorizationStatus.title}
-soundSetting = ${soundSetting.title}
-badgeSetting = ${badgeSetting.title}
-alertSetting = ${alertSetting.title}
-notificationCenterSetting = ${notificationCenterSetting.title}
-lockScreenSetting = ${lockScreenSetting.title}
-carPlaySetting = ${carPlaySetting.title}
-alertStyle = ${alertStyle.title}
-showPreviewsSetting = ${showPreviewsSetting.title}
-providesAppNotificationSettings = $providesAppNotificationSettings
-announcementSetting = ${announcementSetting.title}
+      authorizationStatus = ${authorizationStatus.title}
+      soundSetting = ${soundSetting.title}
+      badgeSetting = ${badgeSetting.title}
+      alertSetting = ${alertSetting.title}
+      notificationCenterSetting = ${notificationCenterSetting.title}
+      lockScreenSetting = ${lockScreenSetting.title}
+      carPlaySetting = ${carPlaySetting.title}
+      alertStyle = ${alertStyle.title}
+      showPreviewsSetting = ${showPreviewsSetting.title}
+      providesAppNotificationSettings = $providesAppNotificationSettings
+      announcementSetting = ${announcementSetting.title}
     ''';
   }
 
@@ -143,10 +143,18 @@ announcementSetting = ${announcementSetting.title}
       NotificationSetting.values[map['lockScreenSetting']],
       NotificationSetting.values[map['carPlaySetting']],
       AlertStyle.values[map['alertStyle']],
-      map['showPreviewsSetting'] != null ? ShowPreviewsSetting.values[map['showPreviewsSetting']] : ShowPreviewsSetting.whenAuthenticated,
-      map['criticalAlertSetting'] != null ? NotificationSetting.values[map['criticalAlertSetting']] : NotificationSetting.notSupported,
-      map['providesAppNotificationSettings'] != null ? (map['providesAppNotificationSettings'] == 1) : false,
-      map['announcementSetting'] != null ? NotificationSetting.values[map['announcementSetting']] : NotificationSetting.notSupported,
+      map['showPreviewsSetting'] != null
+          ? ShowPreviewsSetting.values[map['showPreviewsSetting']]
+          : ShowPreviewsSetting.whenAuthenticated,
+      map['criticalAlertSetting'] != null
+          ? NotificationSetting.values[map['criticalAlertSetting']]
+          : NotificationSetting.notSupported,
+      map['providesAppNotificationSettings'] != null
+          ? (map['providesAppNotificationSettings'] == 1)
+          : false,
+      map['announcementSetting'] != null
+          ? NotificationSetting.values[map['announcementSetting']]
+          : NotificationSetting.notSupported,
     );
   }
 }
