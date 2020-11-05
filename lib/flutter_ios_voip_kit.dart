@@ -6,16 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ios_voip_kit/call_state_type.dart';
 import 'package:flutter_ios_voip_kit/channel_type.dart';
 
+import 'notifications_settings.dart';
+
 final MethodChannel _channel = MethodChannel(ChannelType.method.name);
 
-typedef IncomingPush = void Function(
-  Map<String, dynamic> payload,
-);
-
-typedef IncomingAction = void Function(
-  String uuid,
-  String callerId,
-);
+typedef IncomingPush = void Function(Map<String, dynamic> payload);
+typedef IncomingAction = void Function(String uuid, String callerId);
+typedef OnUpdatePushToken = void Function(String token);
+typedef OnAudioSessionStateChanged = void Function(bool active);
 
 class FlutterIOSVoIPKit {
   static FlutterIOSVoIPKit get instance => _getInstance();
@@ -34,9 +32,7 @@ class FlutterIOSVoIPKit {
       return;
     }
 
-    _eventSubscription = EventChannel(ChannelType.event.name)
-        .receiveBroadcastStream()
-        .listen(_eventListener, onError: _errorListener);
+    _eventSubscription = EventChannel(ChannelType.event.name).receiveBroadcastStream().listen(_eventListener, onError: _errorListener);
   }
 
   /// [onDidReceiveIncomingPush] is not called when the app is not running, because app is not yet running when didReceiveIncomingPushWith is called.
@@ -47,6 +43,9 @@ class FlutterIOSVoIPKit {
   /// If not called, make sure the app is calling [onDidAcceptIncomingCall] and [onDidRejectIncomingCall] in the Dart class(ex: main.dart) that is called immediately after the app is launched.
   IncomingAction onDidAcceptIncomingCall;
   IncomingAction onDidRejectIncomingCall;
+  OnUpdatePushToken onDidUpdatePushToken;
+
+  OnAudioSessionStateChanged onAudioSessionStateChanged;
 
   StreamSubscription<dynamic> _eventSubscription;
 
@@ -148,14 +147,26 @@ class FlutterIOSVoIPKit {
     return await _channel.invokeMethod('callConnected');
   }
 
-  Future<void> requestAuthLocalNotification() async {
+  Future<bool> requestAuthLocalNotification() async {
     print('🎈 requestAuthLocalNotification');
 
     if (Platform.isAndroid) {
       return null;
     }
 
-    return await _channel.invokeMethod('requestAuthLocalNotification');
+    final result = await _channel.invokeMethod('requestAuthLocalNotification');
+    return result['granted'];
+  }
+
+  Future<NotificationSettings> getLocalNotificationsSettings() async {
+    print('🎈 getLocalNotificationsSettings');
+
+    if (Platform.isAndroid) {
+      return null;
+    }
+
+    final result = await _channel.invokeMethod('getLocalNotificationsSettings');
+    return NotificationSettings.createFromMap(result);
   }
 
   Future<void> testIncomingCall({
@@ -218,6 +229,25 @@ class FlutterIOSVoIPKit {
           map['uuid'],
           map['incoming_caller_id'],
         );
+        break;
+
+      case 'onDidUpdatePushToken':
+        final String token = map['token'];
+        print('🎈 onDidUpdatePushToken $token');
+
+        if (onDidUpdatePushToken == null) {
+          return;
+        }
+
+        onDidUpdatePushToken(token);
+        break;
+      case 'onDidActivateAudioSession':
+        print('🎈 onDidActivateAudioSession');
+        if (onAudioSessionStateChanged != null) onAudioSessionStateChanged(true);
+        break;
+      case 'onDidDeactivateAudioSession':
+        print('🎈 onDidDeactivateAudioSession');
+        if (onAudioSessionStateChanged != null) onAudioSessionStateChanged(false);
         break;
     }
   }

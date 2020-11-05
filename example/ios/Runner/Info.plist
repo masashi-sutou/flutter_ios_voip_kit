@@ -22,6 +22,14 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FIVKIconName</key>
+	<string>AppIcon-VoIPKit</string>
+	<key>FIVKLocalizedName</key>
+	<string>VoIP-Kit</string>
+	<key>FIVKSkipRecallScreen</key>
+	<true/>
+	<key>FIVKSupportVideo</key>
+	<true/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -46,13 +54,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    <key>FIVKIconName</key>
-    <string>AppIcon-VoIPKit</string>
-    <key>FIVKLocalizedName</key>
-    <string>VoIP-Kit</string>
-    <key>FIVKSupportVideo</key>
-    <true/>
-    <key>FIVKSkipRecallScreen</key>
-    <true/>
 </dict>
 </plist>
