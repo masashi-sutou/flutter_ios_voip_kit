@@ -10,8 +10,6 @@ extension ChannelKeyTypeEx on ChannelType {
         return 'flutter_ios_voip_kit';
       case ChannelType.event:
         return 'flutter_ios_voip_kit/event';
-      default:
-        return null;
     }
   }
 }

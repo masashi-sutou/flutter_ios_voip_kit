@@ -4,7 +4,7 @@ enum CallStateType {
 }
 
 extension CallStateTypeEx on CallStateType {
-  static CallStateType create(int value) {
+  static CallStateType? create(int value) {
     switch (value) {
       case 0:
         return CallStateType.idle;
@@ -21,8 +21,6 @@ extension CallStateTypeEx on CallStateType {
         return 'idle';
       case CallStateType.calling:
         return 'calling';
-      default:
-        return null;
     }
   }
 }

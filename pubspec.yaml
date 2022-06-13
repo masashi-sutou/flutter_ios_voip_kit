@@ -4,8 +4,8 @@ version: 0.0.5
 homepage: https://github.com/masashi-sutou/flutter_ios_voip_kit
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.10.0"
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=2.0.0"
 
 dependencies:
   flutter:

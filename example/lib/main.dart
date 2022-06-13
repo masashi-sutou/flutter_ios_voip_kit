@@ -47,12 +47,15 @@ class _SelectCallRollState extends State<SelectCallRoll> {
   void _performExampleAction(ExampleAction action) async {
     switch (action) {
       case ExampleAction.RequestAuthorization:
-        final granted = await FlutterIOSVoIPKit.instance.requestAuthLocalNotification();
+        final granted =
+            await FlutterIOSVoIPKit.instance.requestAuthLocalNotification();
         print('🎈 example: requestAuthLocalNotification granted = $granted');
         break;
       case ExampleAction.GetSettings:
-        final settings = await FlutterIOSVoIPKit.instance.getLocalNotificationsSettings();
-        print('🎈 example: getLocalNotificationsSettings settings: \n$settings');
+        final settings =
+            await FlutterIOSVoIPKit.instance.getLocalNotificationsSettings();
+        print(
+            '🎈 example: getLocalNotificationsSettings settings: \n$settings');
 
         showDialog(
             context: context,
@@ -61,7 +64,7 @@ class _SelectCallRollState extends State<SelectCallRoll> {
                 title: Text('Settings'),
                 content: Text('$settings'),
                 actions: [
-                  FlatButton(
+                  TextButton(
                     onPressed: () => Navigator.of(ctx).pop(),
                     child: Text('Ok'),
                   )
