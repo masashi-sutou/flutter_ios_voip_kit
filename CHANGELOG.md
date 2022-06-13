@@ -1,3 +1,8 @@
+## 0.1.0
+
+* PR(#45)
+  * migrate plugin to flutter 2 with null-safety
+
 ## 0.0.5
 
 * PR(#19)
