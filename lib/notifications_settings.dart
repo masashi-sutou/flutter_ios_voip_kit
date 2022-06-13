@@ -7,7 +7,7 @@ enum AuthorizationStatus {
 }
 
 extension on AuthorizationStatus {
-  String get title {
+  String? get title {
     switch (this) {
       case AuthorizationStatus.notDetermined:
         return '.notDetermined';
@@ -32,7 +32,7 @@ enum ShowPreviewsSetting {
 }
 
 extension on ShowPreviewsSetting {
-  String get title {
+  String? get title {
     switch (this) {
       case ShowPreviewsSetting.always:
         return '.always';
@@ -53,7 +53,7 @@ enum NotificationSetting {
 }
 
 extension on NotificationSetting {
-  String get title {
+  String? get title {
     switch (this) {
       case NotificationSetting.notSupported:
         return '.notSupported';
@@ -70,7 +70,7 @@ extension on NotificationSetting {
 enum AlertStyle { none, banner, alert }
 
 extension on AlertStyle {
-  String get title {
+  String? get title {
     switch (this) {
       case AlertStyle.none:
         return '.none';

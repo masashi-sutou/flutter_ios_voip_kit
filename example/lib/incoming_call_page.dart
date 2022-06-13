@@ -111,7 +111,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
 
                               final data = ClipboardData(text: snapshot.data);
                               await Clipboard.setData(data);
-                              Scaffold.of(context).showSnackBar(
+                              ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
                                     '✅ Copy to VoIP device Token for APNs',
