@@ -65,6 +65,10 @@ Create `.p12` from `.cer` with KeyChainAccess |
 ```
 openssl pkcs12 -in voip_services.p12 -out voip_services.pem -nodes -clcerts
 ```
+> If you're running OpenSSL version 3 or later, please note that you may need to include the "-legacy" option.
+> ```
+> openssl pkcs12 -legacy -in voip_services.p12 -out voip_services.pem -nodes -clcerts
+> ```
 
 ### 5. request VoIP notification APNs from your server
 
